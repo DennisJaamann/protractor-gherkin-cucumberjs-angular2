@@ -5,7 +5,7 @@
 var helpers = require('./helpers');
 var webpackMerge = require('webpack-merge'); //Used to merge webpack configs
 var commonConfig = require('./webpack.common.js'); //The settings that are common to prod and dev
-
+const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 /**
  * Webpack Plugins
  */
@@ -20,7 +20,7 @@ const METADATA = webpackMerge(commonConfig.metadata, {
   host: 'localhost',
   port: 3000,
   ENV: ENV,
-  HMR: HMR,
+  HMR: HMR
 });
 
 /**
@@ -29,17 +29,6 @@ const METADATA = webpackMerge(commonConfig.metadata, {
  * See: http://webpack.github.io/docs/configuration.html#cli
  */
 module.exports = webpackMerge(commonConfig, {
-
-  // Merged metadata from webpack.common.js for index.html
-  //
-  // See: (custom attribute)
-  metadata: METADATA,
-
-  // Switch loaders to debug mode.
-  //
-  // See: http://webpack.github.io/docs/configuration.html#debug
-  debug: true,
-
   // Developer tool to enhance debugging
   //
   // See: http://webpack.github.io/docs/configuration.html#devtool
@@ -66,15 +55,34 @@ module.exports = webpackMerge(commonConfig, {
     // They are inside the output.path directory.
     //
     // See: http://webpack.github.io/docs/configuration.html#output-sourcemapfilename
-    sourceMapFilename: '[name].map',
+    sourceMapFilename: '[file].map',
 
     // The filename of non-entry chunks as relative path
     // inside the output.path directory.
     //
     // See: http://webpack.github.io/docs/configuration.html#output-chunkfilename
-    chunkFilename: '[id].chunk.js',
+    chunkFilename: '[id].chunk.js'
 
   },
+
+  module: {
+
+    rules: [
+      {
+        test: /\.ts$/,
+        use: [
+          {
+            loader: 'tslint-loader',
+            options: {
+              configFile: 'tslint.json'
+            }
+          }
+        ],
+        exclude: [/\.(spec|e2e)\.ts$/]
+      }
+    ]
+  },
+
 
   plugins: [
     // Plugin: DefinePlugin
@@ -91,20 +99,20 @@ module.exports = webpackMerge(commonConfig, {
       'process.env': {
         'ENV': JSON.stringify(METADATA.ENV),
         'NODE_ENV': JSON.stringify(METADATA.ENV),
-        'HMR': METADATA.HMR,
+        'HMR': METADATA.HMR
       }
     }),
-  ],
 
-  // Static analysis linter for TypeScript advanced options configuration
-  // Description: An extensible linter for the TypeScript language.
-  //
-  // See: https://github.com/wbuchwalter/tslint-loader
-  tslint: {
-    emitErrors: false,
-    failOnHint: false,
-    resourcePath: 'src',
-  },
+    /**
+     * Plugin LoaderOptionsPlugin (experimental)
+     *
+     * See: https://gist.github.com/sokra/27b24881210b56bbaff7
+     */
+    new LoaderOptionsPlugin({
+      debug: true,
+      options: {}
+    })
+  ],
 
   // Webpack Development Server configuration
   // Description: The webpack-dev-server is a little node.js Express server.
@@ -118,17 +126,16 @@ module.exports = webpackMerge(commonConfig, {
     historyApiFallback: true,
     watchOptions: {
       aggregateTimeout: 300,
-      poll: 1000,
-    },
+      poll: 1000
+    }
   },
 
   node: {
-    global: 'window',
+    global: 'true',
     crypto: 'empty',
     process: true,
     module: false,
     clearImmediate: false,
-    setImmediate: false,
-  },
-
+    setImmediate: false
+  }
 });

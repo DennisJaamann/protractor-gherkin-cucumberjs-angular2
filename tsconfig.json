@@ -6,27 +6,11 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "sourceMap": true,
-    "typeRoots": [
-      "../node_modules/@types"
-    ],
     "lib": [
       "dom",
       "es6"
-    ],
-    "types": [
-      "selenium-webdriver",
-      "hammerjs",
-      "jasmine",
-      "node",
-      "cucumber",
-      "source-map",
-      "uglify-js",
-      "webpack"
     ]
   },
-  "exclude": [
-    "node_modules"
-  ],
   "awesomeTypescriptLoaderOptions": {
     "resolveGlobs": true,
     "forkChecker": true

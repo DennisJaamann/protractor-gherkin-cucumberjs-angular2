@@ -10,14 +10,14 @@ var helpers = require('./helpers');
  */
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var ForkCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
+var CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 
 /**
  * Webpack Constants
  */
 const METADATA = {
   title: 'Testing Angular 2 applications with Protractor & CucumberJS',
-  baseUrl: '/',
+  baseUrl: '/'
 };
 
 /**
@@ -26,12 +26,6 @@ const METADATA = {
  * See: http://webpack.github.io/docs/configuration.html#cli
  */
 module.exports = {
-
-  // Static metadata for index.html
-  //
-  // See: (custom attribute)
-  metadata: METADATA,
-
   // Cache generated modules and chunks to improve performance for multiple incremental builds.
   // This is enabled by default in watch mode.
   // You can pass false to disable it.
@@ -47,8 +41,7 @@ module.exports = {
 
     'polyfills': './src/polyfills.ts',
     'vendor': './src/vendor.ts',
-    'main': './src/main.browser.ts',
-
+    'main': './src/main.browser.ts'
   },
 
   // Options affecting the resolving of modules.
@@ -61,11 +54,8 @@ module.exports = {
     // See: http://webpack.github.io/docs/configuration.html#resolve-extensions
     extensions: ['', '.ts', '.js'],
 
-    // Make sure root is src
-    root: helpers.root('src'),
-
     // remove other default values
-    modulesDirectories: ['node_modules'],
+    modules: [helpers.root('src'), 'node_modules']
 
   },
 
@@ -74,11 +64,13 @@ module.exports = {
   // See: http://webpack.github.io/docs/configuration.html#module
   module: {
 
-    // An array of applied pre and post loaders.
+    // An array of automatically applied loaders.
     //
-    // See: http://webpack.github.io/docs/configuration.html#module-preloaders-module-postloaders
-    preLoaders: [
-
+    // IMPORTANT: The loaders here are resolved relative to the resource which they are applied to.
+    // This means they are not resolved relative to the configuration file.
+    //
+    // See: http://webpack.github.io/docs/configuration.html#module-loaders
+    rules: [
       // Tslint loader support for *.ts files
       //
       // See: https://github.com/wbuchwalter/tslint-loader
@@ -90,39 +82,27 @@ module.exports = {
       // See: https://github.com/webpack/source-map-loader
       {
         test: /\.js$/,
-        loader: 'source-map-loader',
-        exclude: [
-          // these packages have problems with their sourcemaps
-          helpers.root('node_modules/rxjs'),
-          helpers.root('node_modules/@angular2-material'),
-        ]
+        enforce: "pre",
+        loader: 'source-map-loader'
       },
-
-    ],
-
-    // An array of automatically applied loaders.
-    //
-    // IMPORTANT: The loaders here are resolved relative to the resource which they are applied to.
-    // This means they are not resolved relative to the configuration file.
-    //
-    // See: http://webpack.github.io/docs/configuration.html#module-loaders
-    loaders: [
 
       // Typescript loader support for .ts and Angular 2 async routes via .async.ts
       //
       // See: https://github.com/s-panferov/awesome-typescript-loader
       {
         test: /\.ts$/,
-        loader: 'awesome-typescript-loader',
-        exclude: [/\.(spec|e2e)\.ts$/],
+        use: [{loader: 'awesome-typescript-loader'}],
+        exclude: [/\.(spec|e2e)\.ts$/]
       },
 
-      // Json loader support for *.json files.
-      //
-      // See: https://github.com/webpack/json-loader
+      /*
+       * Json loader support for *.json files.
+       *
+       * See: https://github.com/webpack/json-loader
+       */
       {
         test: /\.json$/,
-        loader: 'json-loader',
+        use: 'json-loader'
       },
 
       // Raw loader support for *.css files
@@ -131,7 +111,7 @@ module.exports = {
       // See: https://github.com/webpack/raw-loader
       {
         test: /\.css$/,
-        loader: 'raw-loader',
+        use: [{loader: 'raw-loader'}]
       },
 
       // Support for SCSS
@@ -143,7 +123,7 @@ module.exports = {
       {
         test: /\.scss$/,
         exclude: helpers.root('node_modules'),
-        loader: 'to-string!css-loader?-url!postcss-loader!sass-loader'
+        use: [{loader: 'to-string-loader'}, {loader: 'css-loader'}, {loader: 'sass-loader'}]
       },
 
       // Raw loader support for *.html
@@ -152,35 +132,28 @@ module.exports = {
       // See: https://github.com/webpack/raw-loader
       {
         test: /\.html$/,
-        loader: 'raw-loader',
+        use: [{loader: 'raw-loader'}],
         exclude: [
-          helpers.root('src/index.html'),
-        ],
+          helpers.root('src/index.html')
+        ]
       },
 
       {
-        test: /\.png$/,
-        loader: "url-loader?limit=100000",
-        exclude: [ helpers.root('node_modules') ]
-      },
-
-      {
-        test: /\.jpg$/,
-        loader: "file-loader",
-        exclude: [ helpers.root('node_modules') ]
+        test: /\.(jpg|png|gif)$/,
+        use: [{loader: "file-loader"}],
+        exclude: [helpers.root('node_modules')]
       },
 
       {
         test: /\.(woff2?|ttf|eot|svg)$/,
-        loader: 'url?limit=10000',
-      },
-
-    ],
-
-  },
-
-  postcss: function () {
-    return [require('autoprefixer')]
+        use: {
+          loader: "url",
+          options: {
+            limit: 10000
+          }
+        }
+      }
+    ]
   },
 
   // Add additional plugins to the compiler.
@@ -192,15 +165,7 @@ module.exports = {
     // Description: Do type checking in a separate process, so webpack don't need to wait.
     //
     // See: https://github.com/s-panferov/awesome-typescript-loader#forkchecker-boolean-defaultfalse
-    new ForkCheckerPlugin(),
-
-    // Plugin: OccurenceOrderPlugin
-    // Description: Varies the distribution of the ids to get the smallest id length
-    // for often used ids.
-    //
-    // See: https://webpack.github.io/docs/list-of-plugins.html#occurrenceorderplugin
-    // See: https://github.com/webpack/docs/wiki/optimization#minimize
-    new webpack.optimize.OccurenceOrderPlugin(true),
+    new CheckerPlugin(),
 
     // Plugin: CommonsChunkPlugin
     // Description: Shares common code between the pages.
@@ -210,7 +175,7 @@ module.exports = {
     // See: https://github.com/webpack/docs/wiki/optimization#multi-page-app
     new webpack.optimize.CommonsChunkPlugin({
       name: helpers.reverse(['polyfills', 'vendor', 'main']),
-      minChunks: Infinity,
+      minChunks: Infinity
     }),
 
     // Plugin: CopyWebpackPlugin
@@ -221,7 +186,7 @@ module.exports = {
     // See: https://www.npmjs.com/package/copy-webpack-plugin
     new CopyWebpackPlugin([{
       from: 'src/assets',
-      to: 'assets',
+      to: 'assets'
     }]),
 
     // Plugin: HtmlWebpackPlugin
@@ -233,15 +198,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'src/index.html',
       chunksSortMode: helpers.packageSort(['polyfills', 'vendor', 'main'])
-    }),
-
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-      'window.jQuery': 'jquery',
-      _: 'lodash'
-    }),
-
+    })
   ],
 
   // Include polyfills or mocks for various node stuff
@@ -249,11 +206,11 @@ module.exports = {
   //
   // See: https://webpack.github.io/docs/configuration.html#node
   node: {
-    global: 'window',
+    global: 'true',
     crypto: 'empty',
+    process: true,
     module: false,
     clearImmediate: false,
-    setImmediate: false,
-  },
-
+    setImmediate: false
+  }
 };
