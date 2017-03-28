@@ -11,6 +11,9 @@
       "es6"
     ]
   },
+  "exclude": [
+    "node_modules"
+  ],
   "awesomeTypescriptLoaderOptions": {
     "resolveGlobs": true,
     "forkChecker": true
