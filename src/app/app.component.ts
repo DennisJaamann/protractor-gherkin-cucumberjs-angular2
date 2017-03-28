@@ -1,6 +1,5 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import {Component, ViewEncapsulation, OnInit} from '@angular/core';
 
-import { AppState } from './app.service';
 
 /*
  * App Component
@@ -16,7 +15,7 @@ import { AppState } from './app.service';
 
 export class AppComponent implements OnInit {
 
-  constructor(private appState: AppState) {
+  constructor() {
   }
 
   ngOnInit() {

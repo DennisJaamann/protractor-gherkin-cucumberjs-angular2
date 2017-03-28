@@ -36,10 +36,10 @@ module.exports = {
     // An array of extensions that should be used to resolve modules.
     //
     // See: http://webpack.github.io/docs/configuration.html#resolve-extensions
-    extensions: ['', '.ts', '.js'],
+    extensions: ['.ts', '.js','.json'],
 
     // Make sure root is src
-    root: helpers.root('src'),
+    root: helpers.root('src')
 
   },
 
@@ -60,8 +60,8 @@ module.exports = {
         test: /\.ts$/,
         loader: 'tslint-loader',
         exclude: [
-          helpers.root('node_modules'),
-        ],
+          helpers.root('node_modules')
+        ]
       },
 
       // Source map loader support for *.js files
@@ -74,9 +74,9 @@ module.exports = {
         exclude: [
           // these packages have problems with their sourcemaps
           helpers.root('node_modules/rxjs'),
-          helpers.root('node_modules/@angular2-material'),
+          helpers.root('node_modules/@angular2-material')
         ]
-      },
+      }
 
     ],
 
@@ -99,11 +99,11 @@ module.exports = {
 
             // Remove TypeScript helpers to be injected
             // below by DefinePlugin
-            "removeComments": true,
+            "removeComments": true
 
           }
         },
-        exclude: [/\.e2e\.ts$/],
+        exclude: [/\.e2e\.ts$/]
       },
 
       // Json loader support for *.json files.
@@ -132,7 +132,7 @@ module.exports = {
       {
         test: /\.css$/,
         loader: 'raw-loader',
-        exclude: [helpers.root('src/index.html')],
+        exclude: [helpers.root('src/index.html')]
       },
 
       // Support for SCSS
@@ -161,8 +161,8 @@ module.exports = {
 
       {
         test: /\.(woff2?|ttf|eot|svg)$/,
-        loader: 'url?limit=10000',
-      },
+        loader: 'url?limit=10000'
+      }
 
     ],
 
@@ -180,7 +180,7 @@ module.exports = {
         include: helpers.root('src'),
         exclude: [
           /\.(e2e|spec)\.ts$/,
-          /node_modules/,
+          /node_modules/
         ]
       }
 
@@ -202,13 +202,11 @@ module.exports = {
     // NOTE: when adding more properties make sure you include them in custom-typings.d.ts
     new DefinePlugin({
       'ENV': JSON.stringify(ENV),
-      'HMR': false,
       'process.env': {
         'ENV': JSON.stringify(ENV),
-        'NODE_ENV': JSON.stringify(ENV),
-        'HMR': false,
+        'NODE_ENV': JSON.stringify(ENV)
       }
-    }),
+    })
 
   ],
 
@@ -219,7 +217,7 @@ module.exports = {
   tslint: {
     emitErrors: false,
     failOnHint: false,
-    resourcePath: 'src',
+    resourcePath: 'src'
   },
 
   // Include polyfills or mocks for various node stuff
@@ -227,12 +225,12 @@ module.exports = {
   //
   // See: https://webpack.github.io/docs/configuration.html#node
   node: {
-    global: 'window',
+    global: true,
     process: false,
     crypto: 'empty',
     module: false,
     clearImmediate: false,
-    setImmediate: false,
+    setImmediate: false
   }
 
 };

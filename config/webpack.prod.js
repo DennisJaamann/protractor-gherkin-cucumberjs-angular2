@@ -25,8 +25,7 @@ const PORT = process.env.PORT || 8080;
 const METADATA = webpackMerge(commonConfig.metadata, {
   host: HOST,
   port: PORT,
-  ENV: ENV,
-  HMR: false,
+  ENV: ENV
 });
 
 module.exports = webpackMerge(commonConfig, {
@@ -100,11 +99,9 @@ module.exports = webpackMerge(commonConfig, {
     // NOTE: when adding more properties make sure you include them in custom-typings.d.ts
     new DefinePlugin({
       'ENV': JSON.stringify(METADATA.ENV),
-      'HMR': METADATA.HMR,
       'process.env': {
         'ENV': JSON.stringify(METADATA.ENV),
-        'NODE_ENV': JSON.stringify(METADATA.ENV),
-        'HMR': METADATA.HMR,
+        'NODE_ENV': JSON.stringify(METADATA.ENV)
       }
     }),
 
@@ -133,67 +130,67 @@ module.exports = webpackMerge(commonConfig, {
       beautify: false, //prod
 
       mangle: {
-        screw_ie8 : true,
+        screw_ie8: true,
         keep_fnames: true
       }, //prod
       /*
-      mangle: {
-        screw_ie8: true,
-        except: [
-            'App',
-            'About',
-            'Contact',
-            'Home',
-            'Menu',
-            'Footer',
-            'XLarge',
-            'RouterActive',
-            'RouterLink',
-            'RouterOutlet',
-            'NgFor',
-            'NgIf',
-            'NgClass',
-            'NgSwitch',
-            'NgStyle',
-            'NgSwitchDefault',
-            'NgControl',
-            'NgControlName',
-            'NgControlGroup',
-            'NgFormControl',
-            'NgModel',
-            'NgFormModel',
-            'NgForm',
-            'NgSelectOption',
-            'DefaultValueAccessor',
-            'NumberValueAccessor',
-            'CheckboxControlValueAccessor',
-            'SelectControlValueAccessor',
-            'RadioControlValueAccessor',
-            'NgControlStatus',
-            'RequiredValidator',
-            'MinLengthValidator',
-            'MaxLengthValidator',
-            'PatternValidator',
-            'AsyncPipe',
-            'DatePipe',
-            'JsonPipe',
-            'NumberPipe',
-            'DecimalPipe',
-            'PercentPipe',
-            'CurrencyPipe',
-            'LowerCasePipe',
-            'UpperCasePipe',
-            'SlicePipe',
-            'ReplacePipe',
-            'I18nPluralPipe',
-            'I18nSelectPipe'
-          ] // Needed for uglify RouterLink problem
-      }, // prod
-      */
+       mangle: {
+       screw_ie8: true,
+       except: [
+       'App',
+       'About',
+       'Contact',
+       'Home',
+       'Menu',
+       'Footer',
+       'XLarge',
+       'RouterActive',
+       'RouterLink',
+       'RouterOutlet',
+       'NgFor',
+       'NgIf',
+       'NgClass',
+       'NgSwitch',
+       'NgStyle',
+       'NgSwitchDefault',
+       'NgControl',
+       'NgControlName',
+       'NgControlGroup',
+       'NgFormControl',
+       'NgModel',
+       'NgFormModel',
+       'NgForm',
+       'NgSelectOption',
+       'DefaultValueAccessor',
+       'NumberValueAccessor',
+       'CheckboxControlValueAccessor',
+       'SelectControlValueAccessor',
+       'RadioControlValueAccessor',
+       'NgControlStatus',
+       'RequiredValidator',
+       'MinLengthValidator',
+       'MaxLengthValidator',
+       'PatternValidator',
+       'AsyncPipe',
+       'DatePipe',
+       'JsonPipe',
+       'NumberPipe',
+       'DecimalPipe',
+       'PercentPipe',
+       'CurrencyPipe',
+       'LowerCasePipe',
+       'UpperCasePipe',
+       'SlicePipe',
+       'ReplacePipe',
+       'I18nPluralPipe',
+       'I18nSelectPipe'
+       ] // Needed for uglify RouterLink problem
+       }, // prod
+       */
       compress: {
         screw_ie8: true
       }, //prod
-      comments: false, //prod
+      comments: false //prod
     }),
 
     // Plugin: CompressionPlugin
@@ -203,7 +200,7 @@ module.exports = webpackMerge(commonConfig, {
     // See: https://github.com/webpack/compression-webpack-plugin
     new CompressionPlugin({
       regExp: /\.css$|\.html$|\.js$|\.map$/,
-      threshold: 2 * 1024,
+      threshold: 2 * 1024
     })
 
   ],
@@ -215,7 +212,7 @@ module.exports = webpackMerge(commonConfig, {
   tslint: {
     emitErrors: true,
     failOnHint: true,
-    resourcePath: 'src',
+    resourcePath: 'src'
   },
 
   // Html loader advanced options
@@ -231,16 +228,16 @@ module.exports = webpackMerge(commonConfig, {
       [/\*/, /(?:)/],
       [/\[?\(?/, /(?:)/]
     ],
-    customAttrAssign: [/\)?\]?=/],
+    customAttrAssign: [/\)?\]?=/]
   },
 
   node: {
-    global: 'window',
+    global: true,
     crypto: 'empty',
     process: false,
     module: false,
     clearImmediate: false,
-    setImmediate: false,
-  },
+    setImmediate: false
+  }
 
 });

@@ -15,12 +15,10 @@ var DefinePlugin = require('webpack/lib/DefinePlugin');
  * Webpack Constants
  */
 const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
-const HMR = helpers.hasProcessFlag('hot');
 const METADATA = webpackMerge(commonConfig.metadata, {
   host: 'localhost',
   port: 3000,
-  ENV: ENV,
-  HMR: HMR
+  ENV: ENV
 });
 
 /**
@@ -95,11 +93,9 @@ module.exports = webpackMerge(commonConfig, {
     // NOTE: when adding more properties make sure you include them in custom-typings.d.ts
     new DefinePlugin({
       'ENV': JSON.stringify(METADATA.ENV),
-      'HMR': METADATA.HMR,
       'process.env': {
         'ENV': JSON.stringify(METADATA.ENV),
-        'NODE_ENV': JSON.stringify(METADATA.ENV),
-        'HMR': METADATA.HMR
+        'NODE_ENV': JSON.stringify(METADATA.ENV)
       }
     }),
 
@@ -131,7 +127,7 @@ module.exports = webpackMerge(commonConfig, {
   },
 
   node: {
-    global: 'true',
+    global: true,
     crypto: 'empty',
     process: true,
     module: false,

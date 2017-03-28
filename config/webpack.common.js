@@ -52,10 +52,10 @@ module.exports = {
     // An array of extensions that should be used to resolve modules.
     //
     // See: http://webpack.github.io/docs/configuration.html#resolve-extensions
-    extensions: ['', '.ts', '.js'],
+    extensions: ['.ts', '.js','.json'],
 
     // remove other default values
-    modules: [helpers.root('src'), 'node_modules']
+    modules: [helpers.root('src'), helpers.root('node_modules')]
 
   },
 
@@ -206,7 +206,7 @@ module.exports = {
   //
   // See: https://webpack.github.io/docs/configuration.html#node
   node: {
-    global: 'true',
+    global: true,
     crypto: 'empty',
     process: true,
     module: false,

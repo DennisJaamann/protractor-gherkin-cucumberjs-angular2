@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { AppComponent, ROUTES, AppState } from './';
+import { AppComponent, ROUTES} from './';
 import { LoginComponent } from './login';
 import { RegisterComponent } from './register';
 import { SetNewPasswordComponent } from './set-new-password';
@@ -12,7 +12,6 @@ import { ForgotPasswordComponent } from './forgot-password';
 import { SpeakerRegistrationModule } from './speaker-registration';
 
 const APP_PROVIDERS = [
-    AppState
 ];
 
 @NgModule({
